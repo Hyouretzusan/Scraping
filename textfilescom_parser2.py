@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
 
+listaLink = []
 def directoryMap():
     html = urlopen("http://www.textfiles.com/directory.html")
     bsObj = BeautifulSoup(html, "html.parser")
@@ -9,17 +10,19 @@ def directoryMap():
     for link in bsObj.findAll("a", href=re.compile("(\w+)")):
         if link not in noBuscado:
             if 'href' in link.attrs:
-                #linkStr = str(link.attrs['href'])
-                #directoryList = directoryList.append(linkStr)
-                linkSearch = link.attrs["href"] #directorySearch(link.attrs["href"])
-                return(directorySearch(linkSearch))
+                listaLink.append(link.attrs["href"])
+    return(directorySearch(listaLink))
 
 
-def directorySearch(linkSearch): #solo esta pasando '100'
-    print("http://www.textfiles.com/%s" % linkSearch)
-    """html = urlopen("http://www.textfiles.com/%s" % linkSearch)
-    bsObj = BeautifulSoup(html, "html.parser")
-    for link in bsObj.findAll("a"):
-        print(link)"""
+def directorySearch(listaLink): #solo esta pasando '100'
+    for pagina in listaLink:
+        listaPagina = []
+        html = urlopen("http://www.textfiles.com/%s" % pagina)
+        bsObj = BeautifulSoup(html, "html.parser")
+        for link in bsObj.findAll("a", href=re.compile("(.txt$)")):
+            #if link not in noBuscado:
+            if 'href' in link.attrs:
+                listaPagina.append(link.attrs["href"])
+        print(listaPagina)
 
 directoryMap()

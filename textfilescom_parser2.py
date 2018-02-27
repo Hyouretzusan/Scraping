@@ -14,13 +14,12 @@ def directoryMap():
     return(directorySearch(listaLink))
 
 
-def directorySearch(listaLink): #solo esta pasando '100'
+def directorySearch(listaLink):
     for pagina in listaLink:
         listaPagina = []
         html = urlopen("http://www.textfiles.com/%s" % pagina)
         bsObj = BeautifulSoup(html, "html.parser")
         for link in bsObj.findAll("a", href=re.compile("(.txt$)")):
-            #if link not in noBuscado:
             if 'href' in link.attrs:
                 listaPagina.append(link.attrs["href"])
         print(listaPagina)

@@ -14,13 +14,17 @@ def directoryMap():
         if link not in noBuscado:
             if 'href' in link.attrs:
                 listaLink.append(link.attrs["href"])
+    listaLink.remove("virus")
     return(bDatos.bdd_insertardirectorio(listaLink), subdirectoryText(listaLink))
+    #return(subdirectoryText(listaLink)) #DEBB
 
 def subdirectoryText(listaLink):
+    #print(listaLink) #DEBB
     listaPagina = []
     final = len(listaLink)
     contador = 0
     for pagina in listaLink:
+        #while contador < 2: #DEBB
         html = urlopen("http://www.textfiles.com/%s" % pagina)
         bsObj = BeautifulSoup(html, "html.parser")
         for link in bsObj.findAll("a", href=re.compile("(.txt$)")):
@@ -30,6 +34,6 @@ def subdirectoryText(listaLink):
         contador += 1
         print("Subdirectorio %d de" % contador, "%d por agregar" % final)
     return(bDatos.bdd_insertartexto2(listaPagina))
+    #print(listaPagina) #DEBB
         
-
 directoryMap()

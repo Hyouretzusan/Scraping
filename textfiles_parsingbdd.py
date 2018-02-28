@@ -23,9 +23,12 @@ class textfiles_management:
         conn = sqlite3.connect('tfparsing_bdd.sqlite')
         cur = conn.cursor()
         for linkDir in listaLink:
-            cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))
-            conn.commit()
-            print("%s registrado" % linkDir)
+            if linkDir == "virus":
+                continue
+            else:
+                cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))
+                conn.commit()
+                print("Registrado: %s" % linkDir)
         conn.close()
 
 
@@ -52,7 +55,7 @@ class textfiles_management:
             nivl_id = directPadre[2]
             cur.execute('INSERT INTO Textos (link, nivel_id, padre_id) VALUES (?, ?, ?)', (tupla[1], nivl_id, direct_id))
             conn.commit()
-            print("Texto %s registrado " % tupla[1], "Hijo de %s" % tupla[0])
+            print("Hijo de %s" % tupla[0], "Texto %s registrado" % tupla[1])
         conn.close()
 
 
@@ -61,18 +64,21 @@ class textfiles_management:
         cur = conn.cursor()
         
         if tabla == "Directorio":
-            cur.execute('SELECT * FROM Directorio')
+            cur.execute('SELECT link FROM Directorio')
         elif tabla == "Subdirectorio":
-            cur.execute('SELECT * FROM Subdirectorio')
+            cur.execute('SELECT link FROM Subdirectorio')
         elif tabla == "Textos":
-            cur.execute('SELECT * FROM Textos')
+            cur.execute('SELECT link FROM Textos')
         
-        print("La base de datos contiene los siguientes registros:\n")
-        for row in cur:
-            if row is None:
-                print("No hay registros")
-            else:
-                print(row)
+        existencia = cur.fetchall()
+
+        if len(existencia) == 0:
+            print("\nNo hay registros para la tabla %s" % tabla)
+        
+        else:
+            print("La base de datos contiene los siguientes registros:\n")
+            for row in existencia:
+                print(row[0])
         conn.close()
 
 

@@ -2,7 +2,7 @@ from textfiles_parsingbdd import textfiles_management
 
 print("\nBienvenido a la base de datos para scraping de textos.\n")
 print("Opción 1: Iniciar base de datos\n")
-print("Opción 3: No diponible\nOpción 4: Consultar registro")
+print("Opción 3: No diponible\nOpción 4: No disponible")
 print("Opción 5: Mostrar todos los registros\nOpción 6: No disponible")
 #print("Opción 7: Borrar registro\nOpción 8: Ver carga familiar")
 opUsu = input("Ingrese el número de la opción escogida: ")

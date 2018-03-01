@@ -28,22 +28,25 @@ class textfiles_management:
             else:
                 cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))
                 conn.commit()
-                print("Registrado: %s" % linkDir)
+                print("Registrado directorio: %s" % linkDir)
         conn.close()
 
 
-    def bdd_insertarsubdirectorio(linkDir, linkSub):
+    def bdd_insertarsubdirectorio(listaSub):
         conn = sqlite3.connect('tfparsing_bdd.sqlite')
         cur = conn.cursor()
-        cur.execute('SELECT * FROM Directorio WHERE link = ?', (linkDir, ))
-        direct_id = cur.fetchone()[0]
-        cur.execute('INSERT INTO Subdirectorio (link, directorio_id, nivel) VALUES (?, ?, ?)', (linkSub, direct_id, 2))
-        conn.commit()
-        print("Directorio %s registrado" % linkDir)
+        for tupla in listaSub:
+            directorioPadre = tupla[0]
+            directorioHijo = tupla[1]
+            cur.execute('SELECT * FROM Directorio WHERE link = ?', (directorioPadre, ))
+            direct_id = cur.fetchone()[0]
+            cur.execute('INSERT INTO Subdirectorio (link, directorio_id, nivel) VALUES (?, ?, ?)', (directorioHijo, direct_id, 2))
+            conn.commit()
+            print("Registrado subdirectorio: %s" % directorioHijo)
         conn.close()
 
 
-    def bdd_insertartexto2(listaPagina): #txt segundo nivel: directorio, archivo
+    def bdd_insertartexto(listaPagina): #Podria solicitar un segundo parametro que me indique si la lista es de dir o de sub
         for tupla in listaPagina:
             if len(tupla) == 0:
                 continue

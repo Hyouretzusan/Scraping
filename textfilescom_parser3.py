@@ -18,22 +18,31 @@ def directoryMap():
     return(bDatos.bdd_insertardirectorio(listaLink), subdirectoryText(listaLink))
     #return(subdirectoryText(listaLink)) #DEBB
 
-def subdirectoryText(listaLink):
+
+def subdirectoryText(listaLink): #Directorios de primer nivel
     #print(listaLink) #DEBB
     listaPagina = []
+    listaSub = []
     final = len(listaLink)
     contador = 0
     for pagina in listaLink:
         #while contador < 2: #DEBB
         html = urlopen("http://www.textfiles.com/%s" % pagina)
         bsObj = BeautifulSoup(html, "html.parser")
+        
         for link in bsObj.findAll("a", href=re.compile("(.txt$)")):
             if 'href' in link.attrs:
                 tuplaPagina= (pagina, link.attrs["href"])
                 listaPagina.append(tuplaPagina)
         contador += 1
-        print("Subdirectorio %d de" % contador, "%d por agregar" % final)
-    return(bDatos.bdd_insertartexto2(listaPagina))
-    #print(listaPagina) #DEBB
+        print("Subdirectorio %d de" % contador, "%d" % final)
+
+        for link in bsObj.findAll("a", href=re.compile("^[^/]([A-Z]+[0-9]*[^a-z.//]+)")):
+            if 'href' in link.attrs:
+                tuplaSub = (pagina, link.attrs["href"])
+                listaSub.append(tuplaSub)
+    return(bDatos.bdd_insertartexto(listaPagina), bDatos.bdd_insertarsubdirectorio(listaSub)) #Falta bDatos.bdd_insertartexto(listaSub)
+    #print(listaPagina) #DEBB 
+    #return(subdirectoryMap(listaLink)) #DEBB subdirectoryMap
         
 directoryMap()

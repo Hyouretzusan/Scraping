@@ -61,7 +61,7 @@ elif opUsu == "X":
 
 elif opUsu == 5:
     
-    print("Opción 1: Consultar Directorio\nOpción 2: No disponible\nOpción 3: Textos")
+    print("Opción 1: Consultar Directorio\nOpción 2: Consultar Subdirectorios\nOpción 3: Consultar Textos")
     opIf = input("Ingrese el número de la opción escogida: ")
     
     try:

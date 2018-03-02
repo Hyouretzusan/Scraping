@@ -9,9 +9,9 @@ class textfiles_management:
         conn = sqlite3.connect('tfparsing_bdd.sqlite')
         cur = conn.cursor()
         cur.execute('DROP TABLE IF EXISTS Directorio')
-        cur.execute('CREATE TABLE Directorio (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, link TEXT, nivel)')
+        cur.execute('CREATE TABLE Directorio (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, link TEXT, nivel INTEGER)')
         cur.execute('DROP TABLE IF EXISTS Subdirectorio')
-        cur.execute('CREATE TABLE Subdirectorio (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, link TEXT, nivel, directorio_id INTEGER, UNIQUE(id, directorio_id))')
+        cur.execute('CREATE TABLE Subdirectorio (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, link TEXT, nivel INTEGER, directorio_id INTEGER, UNIQUE(id, directorio_id))')
         cur.execute('DROP TABLE IF EXISTS Textos')
         cur.execute('CREATE TABLE Textos (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, link TEXT, nivel_id INTEGER, padre_id INTEGER, UNIQUE(id, nivel_id))')
         print("LA BASE DE DATOS HA SIDO INICIADA")
@@ -20,10 +20,16 @@ class textfiles_management:
 
 
     def bdd_insertardirectorio(listaLink):
+
         conn = sqlite3.connect('tfparsing_bdd.sqlite')
         cur = conn.cursor()
+        cur.execute('SELECT link FROM Directorio')
+        guardian = [row[0] for row in cur]
+        
         for linkDir in listaLink:
             if linkDir == "virus":
+                continue
+            elif linkDir in guardian:
                 continue
             else:
                 cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))
@@ -38,27 +44,39 @@ class textfiles_management:
         for tupla in listaSub:
             directorioPadre = tupla[0]
             directorioHijo = tupla[1]
+            
             cur.execute('SELECT * FROM Directorio WHERE link = ?', (directorioPadre, ))
             direct_id = cur.fetchone()[0]
             cur.execute('INSERT INTO Subdirectorio (link, directorio_id, nivel) VALUES (?, ?, ?)', (directorioHijo, direct_id, 2))
             conn.commit()
+            
             print("Registrado subdirectorio: %s" % directorioHijo)
         conn.close()
 
 
-    def bdd_insertartexto(listaPagina): #Podria solicitar un segundo parametro que me indique si la lista es de dir o de sub
+    def bdd_insertartexto(listaPagina, nivelPagina):
         for tupla in listaPagina:
             if len(tupla) == 0:
                 continue
             conn = sqlite3.connect('tfparsing_bdd.sqlite')
             cur = conn.cursor()
-            cur.execute('SELECT * FROM Directorio WHERE link = ?', (tupla[0], ))
+            
+            if nivelPagina == "Directorio":
+                cur.execute('SELECT * FROM Directorio WHERE link = ?', (tupla[0], ))
+            elif nivelPagina == "Subdirectorio":
+                cur.execute('SELECT * FROM Subdirectorio WHERE link = ?', (tupla[0], ))
+            
             directPadre = cur.fetchone()
             direct_id = directPadre[0]
             nivl_id = directPadre[2]
+            
             cur.execute('INSERT INTO Textos (link, nivel_id, padre_id) VALUES (?, ?, ?)', (tupla[1], nivl_id, direct_id))
             conn.commit()
-            print("Hijo de %s" % tupla[0], "Texto %s registrado" % tupla[1])
+
+            if nivelPagina == "Directorio":
+                print("Directorio %s. Texto registrado: %s" % (tupla[0],tupla[1]))
+            elif nivelPagina == "Subdirectorio":
+                print("Subirectorio %s. Texto registrado: %s" % (tupla[0],tupla[1]))
         conn.close()
 
 

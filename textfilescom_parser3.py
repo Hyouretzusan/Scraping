@@ -43,6 +43,5 @@ def subdirectoryText(listaLink): #Directorios de primer nivel
                 listaSub.append(tuplaSub)
     return(bDatos.bdd_insertartexto(listaPagina), bDatos.bdd_insertarsubdirectorio(listaSub)) #Falta bDatos.bdd_insertartexto(listaSub)
     #print(listaPagina) #DEBB 
-    #return(subdirectoryMap(listaLink)) #DEBB subdirectoryMap
         
 directoryMap()

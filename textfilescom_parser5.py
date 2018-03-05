@@ -42,6 +42,7 @@ def directoryText(listaLink): #Directorios de primer nivel
         revision = cur.fetchone()[0]
         
         if revision and (revision + 1): #Deja pasar el ultimo elemento siempre
+            print("La base de datos ya contiene todos los registros del directorio: %s" % pagina)
             continue
 
         html = urlopen("http://www.textfiles.com/%s" % pagina)

@@ -66,5 +66,4 @@ def subdirectoryText(listaSub): #Directorios de segundo nivel. (tupla[0] es padr
     return(bDatos.bdd_insertartexto(listaPagina, "Subdirectorio"))
     #print(listaPagina) #DEBB 
 
-
 directoryMap()

@@ -30,6 +30,7 @@ class textfiles_management:
             if linkDir == "virus":
                 continue
             elif linkDir in guardian:
+                print("El directorio %s ya se encuentra registrado" % linkDir)
                 continue
             else:
                 cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))

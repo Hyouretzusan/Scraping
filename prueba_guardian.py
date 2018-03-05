@@ -2,9 +2,9 @@ import sqlite3
 
 conn = sqlite3.connect('tfparsing_bdd.sqlite')
 cur = conn.cursor()
-cur.execute('SELECT link FROM Directorio')
+cur.execute('SELECT id FROM Directorio')
 guardian = [row[0] for row in cur]
-print(guardian)
+print(guardian, max(guardian))
 
 cur.execute('SELECT id FROM Directorio WHERE link = ?', ("adventure", ))
 revision = cur.fetchone()[0]
@@ -19,9 +19,11 @@ else:
 def suma(a, b):
     print(a + b)
 
-def listnumero(suma):
+def listnumero():
     lista2 = [1,2,3,4]
     for numero in lista2:
         a = numero
         b = numero + 1
         suma(a,b)
+
+listnumero()

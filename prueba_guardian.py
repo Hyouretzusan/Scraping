@@ -27,3 +27,16 @@ def listnumero():
         suma(a,b)
 
 listnumero()
+
+cur.execute('SELECT link FROM Textos WHERE nivel_id = ?', ("2", ))
+revision2 = cur.fetchone()
+if revision2 is None:
+    print("NONE!")
+print("2: ", revision2, type(revision2), cur, "\n")
+
+cur.execute('SELECT id FROM Textos')
+lastText = max([row[0] for row in cur])
+cur.execute('SELECT * FROM Textos WHERE id = ?', (lastText, ))
+lastTextInfo = cur.fetchone()
+print("lastText:", lastText, "lastTextInfo:", lastTextInfo)
+

@@ -19,23 +19,22 @@ class textfiles_management:
         conn.close()
 
 
-    def bdd_insertardirectorio(listaLink):
+    def bdd_insertardirectorio(linkDir):
 
         conn = sqlite3.connect('tfparsing_bdd.sqlite')
         cur = conn.cursor()
         cur.execute('SELECT link FROM Directorio')
         guardian = [row[0] for row in cur]
         
-        for linkDir in listaLink:
-            if linkDir == "virus":
-                continue
-            elif linkDir in guardian:
-                print("El directorio %s ya se encuentra registrado" % linkDir)
-                continue
-            else:
-                cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))
-                conn.commit()
-                print("Registrado directorio: %s" % linkDir)
+        #for linkDir in listaLink:
+        if linkDir == "virus":
+            print("NOPE!")
+        elif linkDir in guardian:
+            print("El directorio %s ya se encuentra registrado" % linkDir)
+        else:
+            cur.execute('INSERT INTO Directorio (link, nivel) VALUES (?, ?)', (linkDir, 1))
+            conn.commit()
+            print("Registrado directorio: %s" % linkDir)
         conn.close()
 
 
@@ -55,8 +54,7 @@ class textfiles_management:
 
 
     def bdd_insertartexto(tuplaPagina, nivelPagina):
-        if len(tuplaPagina) == 0:
-            continue
+  
         conn = sqlite3.connect('tfparsing_bdd.sqlite')
         cur = conn.cursor()
             
@@ -66,16 +64,20 @@ class textfiles_management:
             cur.execute('SELECT * FROM Subdirectorio WHERE link = ?', (tuplaPagina[0], ))
             
         directPadre = cur.fetchone()
-        direct_id = directPadre[0]
-        nivl_id = directPadre[2]
-            
-        cur.execute('INSERT INTO Textos (link, nivel_id, padre_id) VALUES (?, ?, ?)', (tuplaPagina[1], nivl_id, direct_id))
-        conn.commit()
+        
+        if directPadre is not None:
+            direct_id = directPadre[0]
+            nivl_id = directPadre[2]
+                
+            cur.execute('INSERT INTO Textos (link, nivel_id, padre_id) VALUES (?, ?, ?)', (tuplaPagina[1], nivl_id, direct_id))
+            conn.commit()
 
-        if nivelPagina == "Directorio":
-            print("Directorio %s. Texto registrado: %s" % (tuplaPagina[0],tuplaPagina[1]))
-        elif nivelPagina == "Subdirectorio":
-            print("Subirectorio %s. Texto registrado: %s" % (tuplaPagina[0],tuplaPagina[1]))
+            if nivelPagina == "Directorio":
+                print("Directorio %s. Texto registrado: %s" % (tuplaPagina[0],tuplaPagina[1]))
+            elif nivelPagina == "Subdirectorio":
+                print("Subdirectorio %s. Texto registrado: %s" % (tuplaPagina[0],tuplaPagina[1]))
+        else:
+            print("Corrida en cero")
         conn.close()
 
 

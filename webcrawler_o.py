@@ -1,11 +1,12 @@
 """ADVERTENCIA: Este código puede llevarte a cualquier parte del internet. Incluyendo
-sitios peligrosos. Analiza el código parte por parte antes de correrlo"""
+sitios peligrosos. Analiza el código parte por partes antes de correrlo"""
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
 import datetime
 import random
+
 
 pages = set()
 random.seed(datetime.datetime.now())
@@ -22,7 +23,7 @@ def getInternalLinks(bsObj, includeUrl):
 
 #Retrieves a list of all external links found on a page
 def getExternalLinks(bsObj, excludeUrl):
-externalLinks = []
+    externalLinks = []
     #Finds all links that start with "http" or "www" that do
     #not contain the current URL
     for link in bsObj.findAll("a",
@@ -35,12 +36,13 @@ externalLinks = []
 
 def splitAddress(address):
     addressParts = address.replace("http://", "").split("/")
+    print("Partes de url:", addressParts)
     return addressParts
 
 
 def getRandomExternalLink(startingPage):
     html = urlopen(startingPage)
-    bsObj = BeautifulSoup(html)
+    bsObj = BeautifulSoup(html, 'html.parser')
     externalLinks = getExternalLinks(bsObj, splitAddress(startingPage)[0])
     if len(externalLinks) == 0:
         internalLinks = getInternalLinks(startingPage)
@@ -54,7 +56,5 @@ def followExternalOnly(startingSite):
     externalLink = getRandomExternalLink("http://oreilly.com")
     print("Random external link is: "+externalLink)
     followExternalOnly(externalLink)
-    followExternalOnly("http://oreilly.com")
-
 
 followExternalOnly("http://oreilly.com")

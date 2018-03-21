@@ -1,8 +1,8 @@
 from urllib.request import urlopen
-from pdfminer.pdfinterp import PDFResourceManager, process_pdf
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from io import StringIO
+from pdfminer.pdfinterp import PDFResourceManager, process_pdf #Funciones para procesamiento
+from pdfminer.converter import TextConverter #Convertidor a texto
+from pdfminer.layout import LAParams #Parametros para procesar imagen/texto
+from io import StringIO #Llamado a modulo String para el convertidor
 from io import open
 
 def readPDF(pdfFile):
@@ -28,5 +28,5 @@ def readPDF(pdfFile):
 
     fout.close()
 
-pdfFile = urlopen("http://pythonscraping.com/pages/warandpeace/chapter1.pdf");
+pdfFile = urlopen("http://pythonscraping.com/pages/warandpeace/chapter1.pdf")
 outputString = readPDF(pdfFile)

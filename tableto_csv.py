@@ -20,4 +20,3 @@ try:
         writer.writerow(csvRow) #Se escribe el row completo al archivo
 finally:
     csvFile.close()
-    
